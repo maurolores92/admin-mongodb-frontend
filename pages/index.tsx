@@ -1,26 +1,28 @@
 import Link from 'next/link';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 
 function Dashboard() {
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <Box>
-        <Link href="/ingresos">
-          <Button variant="contained" color="primary" fullWidth>
-            Ingresos
-          </Button>
-        </Link>
-      </Box>
-      <Box mt={2}>
-        <Link href="/gastos">
-          <Button variant="contained" color="secondary" fullWidth>
-            Gastos
-          </Button>
-        </Link>
-      </Box>
-    </div>
+    <AppBar position="static" className='navbar'>
+      <Toolbar>
+        <Box sx={{ display: 'flex' }}>
+          <Link href="/ingresos" passHref>
+            <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+              Ingresos
+            </Button>
+          </Link>
+          <Link href="/gastos" passHref>
+            <Button variant="contained" color="secondary">
+              Gastos
+            </Button>
+          </Link>
+        </Box>
+      </Toolbar>
+    </AppBar>
+    
   );
 }
 

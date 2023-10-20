@@ -1,11 +1,14 @@
 import { useEffect, useCallback, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, TextField, CardHeader, CardContent, Divider, Card } from '@mui/material';
+import { Box } from '@mui/material';
+
 
 interface Gasto {
   id: number;
   nameCost: string;
   amount: number;
   createDate: string;
+  createdAt: string
 }
 
 function Gastos() {
@@ -42,11 +45,8 @@ function Gastos() {
       });
   
       if (response.ok) {
-        // Recargar la lista de gastos después de agregar uno nuevo
         getGastos();
-        // Restablecer el formulario
         setNewGasto({ nameCost: '', amount: 0 });
-        // Ocultar el formulario
         setShowForm(false);
       } else {
         console.error('Error al agregar gasto:', response.statusText);
@@ -61,54 +61,84 @@ function Gastos() {
     getGastos();
   }, [getGastos]);
 
+const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
+
   return (
     <>
-      <Typography variant="h4" sx={{marginBottom:'2rem'}}>Lista de Gastos</Typography>
-      {showForm ? (
-        <form onSubmit={handleFormSubmit}>
-          <TextField
-            label="Nombre del Gasto"
-            value={newGasto.nameCost}
-            onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })}
-          />
-          <TextField
-            label="Monto"
-            value={newGasto.amount}
-            onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })}
-          />
-          <Button type="submit" variant="contained" color="primary" sx={{marginTop:'2rem'}}>
+     <Paper elevation={3} sx={{ padding: '1rem', margin:'3rem auto' , maxWidth:'500px' }}>
+  {showForm ? (
+    <form onSubmit={handleFormSubmit}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <TextField
+          label="Nombre del Gasto"
+          variant="outlined" // Agregar un borde al campo
+          value={newGasto.nameCost}
+          onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })}
+        />
+        <TextField
+          label="Monto"
+          variant="outlined"
+          type="number"
+          value={newGasto.amount}
+          onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })}
+        />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Button type="submit" variant="contained" color="primary">
             Agregar Gasto
           </Button>
-        </form>
-      ) : (
-        <Button variant="contained" color="primary" onClick={() => setShowForm(true)} sx={{marginTop:'2rem'}}>
-          Agregar Gasto
-        </Button>
-      )}
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setShowForm(false)}
+          >
+            Cerrar Formulario
+          </Button>
+        </Box>
+      </Box>
+    </form>
+  ) : (
+    <Button variant="contained" color="primary" onClick={() => setShowForm(true)}  sx={{margin:'0 auto', display:'flex'}}>
+      Agregar Gasto
+    </Button>
+  )}
+</Paper>
+
+     <Card sx={{ margin: '3rem auto', maxWidth: '1000px' }}>
+        <CardHeader title="Lista de Gastos" />
+        <CardContent>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Nombre del Ingreso</TableCell>
+                  <TableCell>Monto</TableCell>
+                  <TableCell>Fecha de Creación</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {gastos.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.id}</TableCell>
+                    <TableCell>{item.nameCost}</TableCell>
+                    <TableCell>{item.amount}</TableCell>
+                    <TableCell>{item.createdAt}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Divider sx={{ margin: '1rem 0' }} />
+          <Typography variant="h6">
+            Total: {totalAmount}
+          </Typography>
+        </CardContent>
+      </Card>
+
+      
 
 
-      <TableContainer component={Paper} sx={{marginTop:'3rem'}}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Nombre del Gasto</TableCell>
-              <TableCell>Monto</TableCell>
-              <TableCell>Fecha de Creación</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {gastos.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>{item.nameCost}</TableCell>
-                <TableCell>{item.amount}</TableCell>
-                <TableCell>{item.createDate}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
     </>
   );
 }
