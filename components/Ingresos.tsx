@@ -33,6 +33,10 @@ function Ingresos() {
     }
   }, []);
 
+  useEffect(() => {
+    getIngresos();
+  }, [getIngresos]);
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -56,10 +60,6 @@ function Ingresos() {
     }
   };
   
-
-  useEffect(() => {
-    getIngresos();
-  }, [getIngresos]);
 
 const totalAmount = ingresos.reduce((total, ingreso) => total + ingreso.amount, 0);
 
@@ -122,7 +122,7 @@ const totalAmount = ingresos.reduce((total, ingreso) => total + ingreso.amount, 
                     <TableCell>{item.id}</TableCell>
                     <TableCell>{item.nameCost}</TableCell>
                     <TableCell>{item.amount}</TableCell>
-                    <TableCell>{item.createdAt}</TableCell>
+                    <TableCell>{item.createDate}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

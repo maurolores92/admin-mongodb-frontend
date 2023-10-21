@@ -1,8 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, TextField, CardHeader, CardContent, Divider, Card } from '@mui/material';
 import { Box } from '@mui/material';
-
-
 interface Gasto {
   id: number;
   nameCost: string;
@@ -33,6 +31,10 @@ function Gastos() {
     }
   }, []);
 
+  useEffect(() => {
+    getGastos();
+  }, [getGastos]);
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -55,11 +57,6 @@ function Gastos() {
       console.error('Error al agregar gasto:', error);
     }
   };
-  
-
-  useEffect(() => {
-    getGastos();
-  }, [getGastos]);
 
 const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
 
@@ -122,7 +119,7 @@ const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
                     <TableCell>{item.id}</TableCell>
                     <TableCell>{item.nameCost}</TableCell>
                     <TableCell>{item.amount}</TableCell>
-                    <TableCell>{item.createdAt}</TableCell>
+                    <TableCell>{item.createDate}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -134,10 +131,6 @@ const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
           </Typography>
         </CardContent>
       </Card>
-
-      
-
-
 
     </>
   );
