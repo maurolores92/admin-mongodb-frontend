@@ -1,6 +1,11 @@
 import { useEffect, useCallback, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, TextField, CardHeader, CardContent, Divider, Card } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, TextField, CardHeader, CardContent, Divider, Card, IconButton, } from '@mui/material';
 import { Box } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Link from 'next/link';
+
 interface Gasto {
   id: number;
   nameCost: string;
@@ -60,6 +65,24 @@ function Gastos() {
 
 const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
 
+const handleDelete = (itemId: number) => {
+  console.log('Item ID a eliminar:', itemId);
+  fetch(`http://localhost:3001/gastos/${itemId}`, {
+    method: 'DELETE',
+  })
+    .then((response) => {
+      if (response.ok) {
+        const updatedList = gastos.filter((item) => item.id !== itemId);
+        setGastos(updatedList);
+      } else {
+        console.error('Error al eliminar el objeto:', response.statusText);
+      }
+    })
+    .catch((error) => {
+      console.error('Error al eliminar el objeto:', error);
+    });
+};
+
   return (
     <>
      <Paper elevation={3} sx={{ padding: '1rem', margin:'3rem auto' , maxWidth:'500px' }}>
@@ -94,9 +117,16 @@ const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
       </Box>
     </form>
   ) : (
+    <Box sx={{display:'flex'}}>
+      <Link href="/">
+          <IconButton>
+            <ArrowBackIcon sx={{ fontSize: '2.5rem' }} />
+          </IconButton>
+    </Link>
     <Button variant="contained" color="primary" onClick={() => setShowForm(true)}  sx={{margin:'0 auto', display:'flex'}}>
       Agregar Gasto
     </Button>
+    </Box>
   )}
 </Paper>
 
@@ -111,6 +141,7 @@ const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
                   <TableCell>Nombre del Ingreso</TableCell>
                   <TableCell>Monto</TableCell>
                   <TableCell>Fecha de Creación</TableCell>
+                  <TableCell>Acciones</TableCell> {/* Columna para acciones */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -118,8 +149,22 @@ const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
                   <TableRow key={item.id}>
                     <TableCell>{item.id}</TableCell>
                     <TableCell>{item.nameCost}</TableCell>
-                    <TableCell>{item.amount}</TableCell>
+                    <TableCell>{item.amount.toLocaleString()}</TableCell>
                     <TableCell>{item.createDate}</TableCell>
+                    <TableCell>
+                {/* Botón de editar (puedes agregar el evento onClick para manejar la edición) */}
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+                {/* Botón de borrar (puedes agregar el evento onClick para manejar la eliminación) */}
+                <IconButton
+                  onClick={() => handleDelete(item.id)}
+                  color="error"
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -127,7 +172,7 @@ const totalAmount = gastos.reduce((total, gasto) => total + gasto.amount, 0);
           </TableContainer>
           <Divider sx={{ margin: '1rem 0' }} />
           <Typography variant="h6">
-            Total: {totalAmount}
+            Total: {totalAmount.toLocaleString()}
           </Typography>
         </CardContent>
       </Card>

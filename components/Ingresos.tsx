@@ -1,6 +1,10 @@
 import { useEffect, useCallback, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, TextField, Card, CardContent, CardHeader, Divider, } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, TextField, Card, CardContent, CardHeader, Divider, IconButton, } from '@mui/material';
 import { Box } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Link from 'next/link';
 
 
 interface Ingreso {
@@ -60,12 +64,31 @@ function Ingresos() {
     }
   };
   
+  const handleDelete = (itemId: number) => {
+    console.log('Item ID a eliminar:', itemId);
+    fetch(`http://localhost:3001/ingresos/${itemId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Eliminar el objeto localmente
+          const updatedList = ingresos.filter((item) => item.id !== itemId);
+          setIngresos(updatedList);
+        } else {
+          console.error('Error al eliminar el objeto:', response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error('Error al eliminar el objeto:', error);
+      });
+  };
 
 const totalAmount = ingresos.reduce((total, ingreso) => total + ingreso.amount, 0);
 
   return (
     <>
-           <Paper elevation={3} sx={{ padding: '1rem', margin:'3rem auto' , maxWidth:'500px' }}>
+    
+  <Paper elevation={3} sx={{ padding: '1rem', margin:'3rem auto' , maxWidth:'500px' }}>
   {showForm ? (
     <form onSubmit={handleFormSubmit}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -97,47 +120,63 @@ const totalAmount = ingresos.reduce((total, ingreso) => total + ingreso.amount, 
       </Box>
     </form>
   ) : (
+    <Box sx={{display:'flex'}}>
+      <Link href="/">
+          <IconButton>
+            <ArrowBackIcon sx={{ fontSize: '2.5rem' }} />
+          </IconButton>
+    </Link>
     <Button variant="contained" color="primary" onClick={() => setShowForm(true)} sx={{margin:'0 auto', display:'flex'}}>
       Agregar Ingreso
     </Button>
+    </Box>
   )}
 </Paper>
 
 <Card sx={{ margin: '3rem auto', maxWidth: '1000px' }}>
-        <CardHeader title="Lista de Ingresos" />
-        <CardContent>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>Nombre del Ingreso</TableCell>
-                  <TableCell>Monto</TableCell>
-                  <TableCell>Fecha de Creación</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {ingresos.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.id}</TableCell>
-                    <TableCell>{item.nameCost}</TableCell>
-                    <TableCell>{item.amount}</TableCell>
-                    <TableCell>{item.createDate}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Divider sx={{ margin: '1rem 0' }} />
-          <Typography variant="h6">
-            Total: {totalAmount}
-          </Typography>
-        </CardContent>
-      </Card>
-
-
-
-
+  <CardHeader title="Lista de Ingresos" />
+  <CardContent>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Nombre del Ingreso</TableCell>
+            <TableCell>Monto</TableCell>
+            <TableCell>Fecha de Creación</TableCell>
+            <TableCell>Acciones</TableCell> 
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {ingresos.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell>{item.id}</TableCell>
+              <TableCell>{item.nameCost}</TableCell>
+              <TableCell>{item.amount.toLocaleString()}</TableCell>
+              <TableCell>{item.createDate}</TableCell>
+              <TableCell>
+                <IconButton >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => handleDelete(item.id)}
+                  color="error"
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    <Divider sx={{ margin: '1rem 0' }} />
+    <Typography variant="h6">
+      Total: {totalAmount.toLocaleString()}
+    </Typography>
+  </CardContent>
+</Card>
     </>
   );
 }
