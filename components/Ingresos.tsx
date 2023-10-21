@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Link from 'next/link';
-
+import { Modal } from '@mui/material';
 
 interface Ingreso {
   id: number;
@@ -18,6 +18,8 @@ interface Ingreso {
 function Ingresos() {
   const [ingresos, setIngresos] = useState<Ingreso[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newIngreso, setNewIngreso] = useState({
     nameCost: '',
     amount: 0,
@@ -88,54 +90,35 @@ const totalAmount = ingresos.reduce((total, ingreso) => total + ingreso.amount, 
   return (
     <>
     
-  <Paper elevation={3} sx={{ padding: '1rem', margin:'3rem auto' , maxWidth:'500px' }}>
-  {showForm ? (
-    <form onSubmit={handleFormSubmit}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <TextField
-          label="Nombre del Ingreso"
-          variant="outlined" // Agregar un borde al campo
-          value={newIngreso.nameCost}
-          onChange={(e) => setNewIngreso({ ...newIngreso, nameCost: e.target.value })}
-        />
-        <TextField
-          label="Monto"
-          variant="outlined"
-          type="number"
-          value={newIngreso.amount}
-          onChange={(e) => setNewIngreso({ ...newIngreso, amount: parseFloat(e.target.value) })}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Button type="submit" variant="contained" color="primary">
-            Agregar Ingreso
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => setShowForm(false)}
-          >
-            Cerrar Formulario
-          </Button>
-        </Box>
-      </Box>
-    </form>
-  ) : (
-    <Box sx={{display:'flex'}}>
+    <Card sx={{ margin: '3rem auto', maxWidth: '1000px' }}>
+  <CardHeader/>
+
+  <CardContent>
       <Link href="/">
           <IconButton>
-            <ArrowBackIcon sx={{ fontSize: '2.5rem' }} />
+            <ArrowBackIcon sx={{ fontSize: '2rem' }} />
           </IconButton>
     </Link>
-    <Button variant="contained" color="primary" onClick={() => setShowForm(true)} sx={{margin:'0 auto', display:'flex'}}>
-      Agregar Ingreso
-    </Button>
-    </Box>
-  )}
-</Paper>
-
-<Card sx={{ margin: '3rem auto', maxWidth: '1000px' }}>
-  <CardHeader title="Lista de Ingresos" />
-  <CardContent>
+            <Box sx={{display:'flex', justifyContent:'space-around', marginBottom:'1rem'}}>
+              <Typography variant='h5'sx={{margin:'auto'}}> Lista de Ingresos</Typography>
+              <Box sx={{display:'flex'}}>
+              <TextField
+              sx={{margin:'0 1rem'}}
+                label="Buscar Ingreso"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsModalOpen(true)}
+                sx={{margin:'0 1rem'}}>
+                Agregar Ingreso
+              </Button>
+              </Box>
+            </Box>
     <TableContainer>
       <Table>
         <TableHead>
@@ -172,11 +155,68 @@ const totalAmount = ingresos.reduce((total, ingreso) => total + ingreso.amount, 
       </Table>
     </TableContainer>
     <Divider sx={{ margin: '1rem 0' }} />
+    <Box sx={{display:'flex', justifyContent:'space-between'}}>
     <Typography variant="h6">
       Total: {totalAmount.toLocaleString()}
     </Typography>
+    <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsModalOpen(true)}
+                sx={{margin:'0 1rem'}}>
+                Agregar Ingreso
+              </Button>
+            </Box>
   </CardContent>
 </Card>
+
+<Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+  <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'white',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <form onSubmit={(e) => {
+  e.preventDefault();
+  handleFormSubmit(e);
+  setIsModalOpen(false);
+}}>
+  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <TextField
+      label="Nombre del Ingreso"
+      variant="outlined"
+      value={newIngreso.nameCost}
+      onChange={(e) => setNewIngreso({ ...newIngreso, nameCost: e.target.value })}
+    />
+    <TextField
+      label="Monto"
+      variant="outlined"
+      type="number"
+      value={newIngreso.amount}
+      onChange={(e) => setNewIngreso({ ...newIngreso, amount: parseFloat(e.target.value) })}
+    />
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Button type="submit" variant="contained" color="primary">
+        Agregar Ingreso
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => setIsModalOpen(false)}>
+        Cerrar
+      </Button>
+    </Box>
+  </Box>
+</form>
+
+        </Box>
+    </Modal>
     </>
   );
 }

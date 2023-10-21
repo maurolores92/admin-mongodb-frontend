@@ -1,9 +1,10 @@
 import Gastos from "../../components/Gastos";
+import GastosView from "../../views/gastos/GastosView";
 
 function GastosMenu() {
     return (
       <>
-      <Gastos/>
+      <GastosView/>
       </>
     );
   }

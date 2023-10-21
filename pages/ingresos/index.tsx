@@ -1,9 +1,10 @@
 import Ingresos from "../../components/Ingresos";
+import IngresosView from "../../views/ingresos/IngresosView";
 
 function IngresosMenu() {
     return (
       <>
-      <Ingresos/>
+      <IngresosView/>
       </>
     );
   }
