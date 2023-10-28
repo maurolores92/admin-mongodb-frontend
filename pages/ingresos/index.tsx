@@ -1,11 +1,12 @@
-import Ingresos from "../../components/Ingresos";
+
+import PageLayout from "../../components/PageLayout";
 import IngresosView from "../../views/ingresos/IngresosView";
 
 function IngresosMenu() {
     return (
-      <>
+      <PageLayout>
       <IngresosView/>
-      </>
+      </PageLayout>
     );
   }
   

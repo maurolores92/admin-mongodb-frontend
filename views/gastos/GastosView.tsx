@@ -123,29 +123,31 @@ import { Modal } from '@mui/material';
       handleFormSubmit(e);
       setIsModalOpen(false); // Aquí se utiliza setIsModalOpen
     }}>
+      <Box sx={{display:'flex', flexDirection:'column'}}>
       <TextField
         label="Nombre del Gasto"
         variant="outlined"
         value={newGasto.nameCost}
-        onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })}
+        onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })}  sx={{margin:'1rem'}}
       />
       <TextField
         label="Monto"
         variant="outlined"
         type="number"
         value={newGasto.amount}
-        onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })}
+        onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })}  sx={{margin:'1rem'}}
       />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop:'2rem' }}>
         <Button type="submit" variant="contained" color="primary">
-          Agregar Gasto
+          Agregar
         </Button>
         <Button
           variant="contained"
           color="secondary"
           onClick={() => setIsModalOpen(false)} // Aquí también se utiliza setIsModalOpen
         >
-          Cerrar Formulario
+          Cerrar
         </Button>
       </Box>
     </form>

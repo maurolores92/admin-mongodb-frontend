@@ -86,7 +86,7 @@ import { Modal } from '@mui/material';
                 color="primary"
                 onClick={() => setIsModalOpen(true)}
                 sx={{margin:'0 1rem'}}>
-                Agregar Gasto
+                Agregar Ingreso
               </Button>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'end', marginBottom: '20px' }}>
@@ -121,31 +121,23 @@ import { Modal } from '@mui/material';
     <form onSubmit={(e) => {
       e.preventDefault();
       handleFormSubmit(e);
-      setIsModalOpen(false); // Aquí se utiliza setIsModalOpen
-    }}>
-      <TextField
-        label="Nombre del Gasto"
-        variant="outlined"
-        value={newGasto.nameCost}
-        onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })}
-      />
-      <TextField
-        label="Monto"
-        variant="outlined"
-        type="number"
-        value={newGasto.amount}
-        onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })}
-      />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      setIsModalOpen(false);}}>
+
+      <Box sx={{display:'flex', flexDirection:'column'}}>
+        <TextField label="Nombre del Gasto" variant="outlined" value={newGasto.nameCost} onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })} sx={{margin:'1rem'}}/>
+        <TextField label="Monto" variant="outlined" type="number" value={newGasto.amount} onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })} sx={{margin:'1rem'}}/>
+      </Box>
+      
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop:'2rem' }}>
         <Button type="submit" variant="contained" color="primary">
-          Agregar Gasto
+          Agregar
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => setIsModalOpen(false)} // Aquí también se utiliza setIsModalOpen
+          onClick={() => setIsModalOpen(false)}
         >
-          Cerrar Formulario
+          Cerrar
         </Button>
       </Box>
     </form>

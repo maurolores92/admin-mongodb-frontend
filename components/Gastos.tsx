@@ -91,6 +91,7 @@ function Gastos() {
 
   const totalAmount = filteredGastos.reduce((total, gasto) => total + gasto.amount, 0);
 
+  
   return (
     <>
     
@@ -194,21 +195,11 @@ function Gastos() {
           <form onSubmit={(e) => {
             e.preventDefault();
             handleFormSubmit(e); 
-            setIsModalOpen(false);
-          }}>
-            <TextField
-              label="Nombre del Gasto"
-              variant="outlined"
-              value={newGasto.nameCost}
-              onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })}
-            />
-            <TextField
-              label="Monto"
-              variant="outlined"
-              type="number"
-              value={newGasto.amount}
-              onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })}
-            />
+            setIsModalOpen(false);}}>
+            <Box sx={{display:'flex', flexDirection:'column'}}>
+              <TextField label="Nombre del Gasto" variant="outlined" value={newGasto.nameCost} onChange={(e) => setNewGasto({ ...newGasto, nameCost: e.target.value })}/>
+              <TextField label="Monto" variant="outlined" type="number" value={newGasto.amount} onChange={(e) => setNewGasto({ ...newGasto, amount: parseFloat(e.target.value) })}/>
+            </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Button type="submit" variant="contained" color="primary">
                 Agregar Gasto
